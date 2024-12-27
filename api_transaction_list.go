@@ -48,8 +48,8 @@ func (api *api) ListTransactions(
 		SetResult(new(ListTransactionsResponse))
 
 	var httpResp *resty.Response
-
-	if httpResp, err = r.Get("/v1/accounts/{address}/transactions/trc20"); err != nil {
+	//https://api.shasta.trongrid.io
+	if httpResp, err = r.Get(api.uri + "/v1/accounts/{address}/transactions"); err != nil {
 		return nil, err
 	}
 

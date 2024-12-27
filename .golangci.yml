@@ -60,7 +60,7 @@ linters-settings:
     sections:
       - standard
       - default
-      - prefix(github.com/LipsarHQ)
+      - prefix(github.com/eliohn)
       - blank
       - dot
     skip-generated: true
@@ -243,7 +243,7 @@ linters-settings:
 
   gofumpt:
     extra-rules: true
-    module-path: github.com/LipsarHQ
+    module-path: github.com/eliohn
 
   gomnd:
     checks:

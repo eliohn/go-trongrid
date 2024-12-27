@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 
-	"github.com/LipsarHQ/go-trongrid"
+	"github.com/eliohn/go-trongrid"
 )
 
 func TestApi_ListTransactions(t *testing.T) {
@@ -17,9 +17,10 @@ func TestApi_ListTransactions(t *testing.T) {
 
 	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
 	api := trongrid.NewAPI(
+		trongrid.WithURI("https://api.shasta.trongrid.io"),
 		trongrid.WithDebug(),
 		trongrid.WithLogger(&logger),
-		trongrid.WithToken(""),
+		trongrid.WithToken("622ec85e-7406-431d-9caf-0a19501469a4"),
 	)
 
 	ctx := context.Background()
@@ -28,10 +29,10 @@ func TestApi_ListTransactions(t *testing.T) {
 	modelListTransactionsRequest, err := api.ListTransactions(ctx, &trongrid.ListTransactionsRequest{
 		MaxTimestamp:  now.Add(-(time.Hour * 24)),
 		MinTimestamp:  now,
-		Address:       "TWpMnUh9pZS1Mf8yyw9WPiS82WYevKzQo2",
+		Address:       "TDuzLK9vBRuSdhLovyy5gCD2bGp4fjecHk",
 		Fingerprint:   "",
 		OrderBy:       "block_timestamp,desc",
-		Limit:         2,
+		Limit:         200,
 		OnlyConfirmed: true,
 		OnlyFrom:      false,
 		OnlyTo:        false,

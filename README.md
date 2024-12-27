@@ -30,7 +30,7 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/LipsarHQ/go-trongrid"
+	"github.com/eliohn/go-trongrid"
 )
 
 const token = "13f70f8e-65ff-49d2-a218-7cf3fadf6230"
