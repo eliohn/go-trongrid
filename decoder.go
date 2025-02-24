@@ -26,7 +26,7 @@ func NewDecoder() *schema.Decoder {
 }
 
 // ParseValue 金额转换示例（需导入math/big包）
-func ParseValue(valueStr string, decimals int32) *big.Float {
+func ParseValue(valueStr string, decimals int32) float64 {
 	value := new(big.Float)
 	value.SetString(valueStr)
 
@@ -37,8 +37,11 @@ func ParseValue(valueStr string, decimals int32) *big.Float {
 	))
 
 	result := new(big.Float).Quo(value, divisor)
-	return result
+	f64, _ := result.Float64()
+	return f64
 }
+
+// ... existing code ...
 
 // func ParseURI(s string, v any) (err error) {
 //	var vs url.Values

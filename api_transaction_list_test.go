@@ -73,11 +73,11 @@ func TestApi_ListTransactionsTrc20(t *testing.T) {
 func TestApi_ListTransactionsTrc20Main(t *testing.T) {
 	t.Parallel()
 
-	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
+	//logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
 	api := trongrid.NewAPI(
 		trongrid.WithURI("https://api.trongrid.io"),
-		trongrid.WithDebug(),
-		trongrid.WithLogger(&logger),
+		//trongrid.WithDebug(),
+		//trongrid.WithLogger(&logger),
 		trongrid.WithToken("622ec85e-7406-431d-9caf-0a19501469a4"),
 	)
 
@@ -86,19 +86,23 @@ func TestApi_ListTransactionsTrc20Main(t *testing.T) {
 	// TDkHqdvt6ZRnBCbhj3ytYdWTgJkE6LHNfH
 
 	modelListTransactionsRequest, err := api.ListTransactionsTrc20(ctx, &trongrid.ListTransactionsRequest{
-		MaxTimestamp:  now.Add(-(time.Hour * 24)),
+		MaxTimestamp:  now.Add(-(time.Hour * 1)),
 		MinTimestamp:  now,
 		Address:       "TDkHqdvt6ZRnBCbhj3ytYdWTgJkE6LHNfH",
 		Fingerprint:   "",
 		OrderBy:       "block_timestamp,desc",
-		Limit:         200,
+		Limit:         10,
 		OnlyConfirmed: true,
 		OnlyFrom:      false,
-		OnlyTo:        false,
+		OnlyTo:        true,
 	})
 	require.NoError(t, err)
 	//require.NotNil(t, modelListTransactionsRequest)
 	for i := 0; i < len(modelListTransactionsRequest.Data); i++ {
-		t.Logf("modelListTransactionsRequest.Data[%d]: %+v", i, modelListTransactionsRequest.Data[i])
+		item := modelListTransactionsRequest.Data[i]
+		t.Logf("交易ID: %v", item)
+		formattedTime := time.Unix(item.BlockTimestamp/1000, 0).Format("2006-01-02 15:04:05")
+		t.Logf("交易时间: %s %v", formattedTime, trongrid.ParseValue(item.Value, item.TokenInfo.Decimals))
+
 	}
 }
