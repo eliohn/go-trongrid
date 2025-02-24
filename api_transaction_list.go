@@ -67,13 +67,13 @@ func (api *api) ListTransactions(
 	return nil, ErrEmpty
 }
 
+// 修改返回类型和结果映射
 func (api *api) ListTransactionsTrc20(ctx context.Context,
 	req *ListTransactionsRequest,
-) (resp *ListTransactionsResponse, err error) {
+) (resp *TRC20Response, err error) { // 修改返回类型为TRC20Response
 	params := url.Values{}
 	if err = api.encoder.Encode(req, params); err != nil {
 		api.logger.Error().Err(err).Send()
-
 		return nil, err
 	}
 
@@ -84,10 +84,9 @@ func (api *api) ListTransactionsTrc20(ctx context.Context,
 		SetHeader("TRON-PRO-API-KEY", api.token).
 		SetPathParam("address", req.Address).
 		SetQueryParamsFromValues(params).
-		SetResult(new(ListTransactionsResponse))
+		SetResult(new(TRC20Response)) // 修改结果映射
 
 	var httpResp *resty.Response
-	//https://api.shasta.trongrid.io
 	if httpResp, err = r.Get(api.uri + "/v1/accounts/{address}/transactions/trc20"); err != nil {
 		return nil, err
 	}
@@ -95,11 +94,14 @@ func (api *api) ListTransactionsTrc20(ctx context.Context,
 	if v, ok := httpResp.Error().(*Error); ok {
 		err = fmt.Errorf("%w: %s", ErrEmpty, v.Error)
 		api.logger.Error().Err(err).Send()
-
 		return nil, err
 	}
 
-	if v, ok := httpResp.Result().(*ListTransactionsResponse); ok {
+	if v, ok := httpResp.Result().(*TRC20Response); ok {
+		// 添加分页参数处理（如果需要）
+		//if req.Fingerprint == "" && v.Meta != nil {
+		//	// 可以在这里处理分页指纹
+		//}
 		return v, nil
 	}
 

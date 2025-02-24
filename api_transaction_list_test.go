@@ -97,5 +97,8 @@ func TestApi_ListTransactionsTrc20Main(t *testing.T) {
 		OnlyTo:        false,
 	})
 	require.NoError(t, err)
-	require.NotNil(t, modelListTransactionsRequest)
+	//require.NotNil(t, modelListTransactionsRequest)
+	for i := 0; i < len(modelListTransactionsRequest.Data); i++ {
+		t.Logf("modelListTransactionsRequest.Data[%d]: %+v", i, modelListTransactionsRequest.Data[i])
+	}
 }
