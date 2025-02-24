@@ -2,12 +2,11 @@ package trongrid
 
 import (
 	"context"
-	"time"
-
 	"github.com/go-resty/resty/v2"
 	"github.com/gorilla/schema"
 	"github.com/rs/zerolog"
 	"golang.org/x/time/rate"
+	"time"
 )
 
 type API interface {
@@ -58,6 +57,16 @@ func NewAPI(opts ...Option) API {
 	if len(x.token) != 0 {
 		cl.SetHeader("TRON-PRO-API-KEY", x.token)
 	}
+
+	// Set default retry settings
+	cl.SetRetryCount(3). // Default to 3 retries
+				SetRetryWaitTime(1 * time.Second).   // Wait 1 second between retries
+				SetRetryMaxWaitTime(5 * time.Second) // Maximum wait time of 5 seconds
+
+	// Configure retry conditions
+	cl.AddRetryCondition(func(response *resty.Response, err error) bool {
+		return err != nil || response.StatusCode() >= 500
+	})
 
 	x.cl = cl
 

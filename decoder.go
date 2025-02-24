@@ -1,7 +1,6 @@
 package trongrid
 
 import (
-	"math/big"
 	"reflect"
 	"time"
 
@@ -23,22 +22,6 @@ func NewDecoder() *schema.Decoder {
 	decoder.ZeroEmpty(true)
 
 	return decoder
-}
-
-// ParseValue 金额转换示例（需导入math/big包）
-func ParseValue(valueStr string, decimals int32) float64 {
-	value := new(big.Float)
-	value.SetString(valueStr)
-
-	divisor := new(big.Float).SetInt(new(big.Int).Exp(
-		big.NewInt(10),
-		big.NewInt(int64(decimals)),
-		nil,
-	))
-
-	result := new(big.Float).Quo(value, divisor)
-	f64, _ := result.Float64()
-	return f64
 }
 
 // ... existing code ...

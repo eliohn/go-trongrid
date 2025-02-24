@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/go-resty/resty/v2 v2.16.2
 	github.com/gorilla/schema v1.4.1
-	github.com/rs/zerolog v1.31.0
+	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/time v0.6.0
 )

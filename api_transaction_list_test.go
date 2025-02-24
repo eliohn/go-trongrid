@@ -29,7 +29,7 @@ func TestApi_ListTransactions(t *testing.T) {
 	modelListTransactionsRequest, err := api.ListTransactions(ctx, &trongrid.ListTransactionsRequest{
 		MaxTimestamp:  now.Add(-(time.Hour * 24)),
 		MinTimestamp:  now,
-		Address:       "TDuzLK9vBRuSdhLovyy5gCD2bGp4fjecHk",
+		Address:       "TPqG9VfqXycvNTaoBunqLWxUi69gnnQ6Fq",
 		Fingerprint:   "",
 		OrderBy:       "block_timestamp,desc",
 		Limit:         200,
@@ -38,7 +38,13 @@ func TestApi_ListTransactions(t *testing.T) {
 		OnlyTo:        false,
 	})
 	require.NoError(t, err)
-	require.NotNil(t, modelListTransactionsRequest)
+	for i := 0; i < len(modelListTransactionsRequest.Data); i++ {
+		item := modelListTransactionsRequest.Data[i]
+		//t.Logf("交易ID: %v", item)
+		formattedTime := time.Unix(item.BlockTimestamp/1000, 0).Format("2006-01-02 15:04:05")
+		t.Logf("交易时间: %s %f", formattedTime, float64(item.RawData.Contract[0].Parameter.Value.Amount)/1e6)
+
+	}
 }
 func TestApi_ListTransactionsTrc20(t *testing.T) {
 	t.Parallel()
@@ -56,8 +62,8 @@ func TestApi_ListTransactionsTrc20(t *testing.T) {
 	// TDkHqdvt6ZRnBCbhj3ytYdWTgJkE6LHNfH
 
 	modelListTransactionsRequest, err := api.ListTransactionsTrc20(ctx, &trongrid.ListTransactionsRequest{
-		MaxTimestamp:  now.Add(-(time.Hour * 24)),
-		MinTimestamp:  now,
+		MaxTimestamp:  now,
+		MinTimestamp:  now.Add(-(time.Hour * 24)),
 		Address:       "TDuzLK9vBRuSdhLovyy5gCD2bGp4fjecHk",
 		Fingerprint:   "",
 		OrderBy:       "block_timestamp,desc",
@@ -67,7 +73,13 @@ func TestApi_ListTransactionsTrc20(t *testing.T) {
 		OnlyTo:        false,
 	})
 	require.NoError(t, err)
-	require.NotNil(t, modelListTransactionsRequest)
+	for i := 0; i < len(modelListTransactionsRequest.Data); i++ {
+		item := modelListTransactionsRequest.Data[i]
+		t.Logf("交易ID: %v", item)
+		formattedTime := time.Unix(item.BlockTimestamp/1000, 0).Format("2006-01-02 15:04:05")
+		t.Logf("交易时间: %s %v", formattedTime, trongrid.ParseValue(item.Value, item.TokenInfo.Decimals))
+
+	}
 }
 
 func TestApi_ListTransactionsTrc20Main(t *testing.T) {
