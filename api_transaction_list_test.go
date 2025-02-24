@@ -40,3 +40,62 @@ func TestApi_ListTransactions(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, modelListTransactionsRequest)
 }
+func TestApi_ListTransactionsTrc20(t *testing.T) {
+	t.Parallel()
+
+	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
+	api := trongrid.NewAPI(
+		trongrid.WithURI("https://api.shasta.trongrid.io"),
+		trongrid.WithDebug(),
+		trongrid.WithLogger(&logger),
+		trongrid.WithToken("622ec85e-7406-431d-9caf-0a19501469a4"),
+	)
+
+	ctx := context.Background()
+	now := time.Now()
+	// TDkHqdvt6ZRnBCbhj3ytYdWTgJkE6LHNfH
+
+	modelListTransactionsRequest, err := api.ListTransactionsTrc20(ctx, &trongrid.ListTransactionsRequest{
+		MaxTimestamp:  now.Add(-(time.Hour * 24)),
+		MinTimestamp:  now,
+		Address:       "TDuzLK9vBRuSdhLovyy5gCD2bGp4fjecHk",
+		Fingerprint:   "",
+		OrderBy:       "block_timestamp,desc",
+		Limit:         200,
+		OnlyConfirmed: true,
+		OnlyFrom:      false,
+		OnlyTo:        false,
+	})
+	require.NoError(t, err)
+	require.NotNil(t, modelListTransactionsRequest)
+}
+
+func TestApi_ListTransactionsTrc20Main(t *testing.T) {
+	t.Parallel()
+
+	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
+	api := trongrid.NewAPI(
+		trongrid.WithURI("https://api.trongrid.io"),
+		trongrid.WithDebug(),
+		trongrid.WithLogger(&logger),
+		trongrid.WithToken("622ec85e-7406-431d-9caf-0a19501469a4"),
+	)
+
+	ctx := context.Background()
+	now := time.Now()
+	// TDkHqdvt6ZRnBCbhj3ytYdWTgJkE6LHNfH
+
+	modelListTransactionsRequest, err := api.ListTransactionsTrc20(ctx, &trongrid.ListTransactionsRequest{
+		MaxTimestamp:  now.Add(-(time.Hour * 24)),
+		MinTimestamp:  now,
+		Address:       "TDkHqdvt6ZRnBCbhj3ytYdWTgJkE6LHNfH",
+		Fingerprint:   "",
+		OrderBy:       "block_timestamp,desc",
+		Limit:         200,
+		OnlyConfirmed: true,
+		OnlyFrom:      false,
+		OnlyTo:        false,
+	})
+	require.NoError(t, err)
+	require.NotNil(t, modelListTransactionsRequest)
+}

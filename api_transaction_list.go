@@ -66,3 +66,42 @@ func (api *api) ListTransactions(
 
 	return nil, ErrEmpty
 }
+
+func (api *api) ListTransactionsTrc20(ctx context.Context,
+	req *ListTransactionsRequest,
+) (resp *ListTransactionsResponse, err error) {
+	params := url.Values{}
+	if err = api.encoder.Encode(req, params); err != nil {
+		api.logger.Error().Err(err).Send()
+
+		return nil, err
+	}
+
+	r := api.cl.R().
+		ForceContentType("application/json").
+		SetContext(ctx).
+		SetError(new(Error)).
+		SetHeader("TRON-PRO-API-KEY", api.token).
+		SetPathParam("address", req.Address).
+		SetQueryParamsFromValues(params).
+		SetResult(new(ListTransactionsResponse))
+
+	var httpResp *resty.Response
+	//https://api.shasta.trongrid.io
+	if httpResp, err = r.Get(api.uri + "/v1/accounts/{address}/transactions/trc20"); err != nil {
+		return nil, err
+	}
+
+	if v, ok := httpResp.Error().(*Error); ok {
+		err = fmt.Errorf("%w: %s", ErrEmpty, v.Error)
+		api.logger.Error().Err(err).Send()
+
+		return nil, err
+	}
+
+	if v, ok := httpResp.Result().(*ListTransactionsResponse); ok {
+		return v, nil
+	}
+
+	return nil, ErrEmpty
+}

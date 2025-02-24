@@ -13,6 +13,7 @@ import (
 type API interface {
 	// ListTransactions
 	// Docs: https://developers.tron.network/reference/get-trc20-transaction-info-by-account-address
+	ListTransactionsTrc20(ctx context.Context, req *ListTransactionsRequest) (resp *ListTransactionsResponse, err error)
 	ListTransactions(ctx context.Context, req *ListTransactionsRequest) (resp *ListTransactionsResponse, err error)
 }
 
